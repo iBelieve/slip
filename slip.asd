@@ -19,7 +19,10 @@
   :components ((:module "src"
                 :serial t
                 :components
-                ((:file "slip"))))
+                ((:file "utils")
+		 (:file "slip")
+		 (:file "core")
+		 (:file "stages"))))
   :description "A static site generator in Common Lisp"
   :long-description
   #.(uiop:read-file-string
