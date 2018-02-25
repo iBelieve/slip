@@ -1,6 +1,6 @@
 (defpackage :slip.stages
   (:use :cl :slip.utils :slip)
-  (:export #:markdown #:spinneret))
+  (:export #:markdown #:spinneret #:permalinks))
 (in-package :slip.stages)
 
 
@@ -32,4 +32,15 @@
 		 (contents (apply layout args)))
 	    (setf (getf file :contents) contents)))))))
 
+;;; Permalinks
 
+(defun permalinks ()
+  (dofiles file "html"
+    (when (and (get-front file :permalink t)
+	       (not (equal "index" (pathname-name (getf file :name)))))
+      (let* ((filename (getf file :name))
+	     (dirname (append (or (pathname-directory filename) '(:relative))
+			      (list (pathname-name filename)))))
+	(setf (getf file :name) (make-pathname :directory dirname
+					       :name "index"
+					       :type "html"))))))

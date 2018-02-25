@@ -10,10 +10,10 @@
     (uiop:delete-directory-tree (pathname dir)
 				:validate t
 				:if-does-not-exist :ignore))
-  (ensure-directories-exist dir)
   (dolist (file files)
     (let ((dest (merge-pathnames (getf file :name) dir))
 	  (contents (getf file :contents)))
+      (ensure-directories-exist dest)
       (str:to-file dest contents))))
 
 (defun parse-frontmatter (s)
@@ -36,9 +36,9 @@
 (defun set-file-ext (ext file)
   (setf (getf file :name) (replace-ext ext (getf file :name))))
 
-(defun get-front (file key)
+(defun get-front (file key &optional default)
   (when (getf file :frontmatter)
-    (getf (getf file :frontmatter) key)))
+    (getf (getf file :frontmatter) key default)))
 
 (defmacro dofiles (file ext &body body)
   `(dolist (,file *files*)
