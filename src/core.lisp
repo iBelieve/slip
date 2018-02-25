@@ -47,12 +47,14 @@
        (setf *path* (str:concat "/" (trim-suffix "index.html" (to-string (getf ,file :name)))))
        ,@body)))
  
-(defmacro with-page ((&key title) &body body)
+(defmacro with-page ((&key title styles) &body body)
   `(spinneret:with-html-string
      (:doctype)
      (:html
       (:head
-       (:title ,title))
+       (:title ,title)
+       (dolist (stylesheet ,styles)
+	 (:link :rel "stylesheet" :href stylesheet)))
       (:body
        ,@body
        (when *livereload*
