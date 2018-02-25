@@ -1,6 +1,6 @@
 (defpackage :slip.utils
   (:use :cl)
-  (:export #:to-string #:echo #:trim-prefix #:make-keyword #:hash-table-plist #:timing
+  (:export #:to-string #:echo #:trim-prefix #:trim-suffix #:make-keyword #:hash-table-plist #:timing
 	   #:replace-ext #:ignored-dir-p #:ignored-file-p #:not-ignored-dir-p #:not-ignored-file-p
 	   #:collect-files))
 (in-package :slip.utils)
@@ -15,6 +15,11 @@
 (defun trim-prefix (prefix s)
   (if (str:starts-with? prefix s)
       (str:substring (length prefix) t s)
+    s))
+
+(defun trim-suffix (suffix s)
+  (if (str:ends-with? suffix s)
+      (str:substring 0 (- (length suffix)) s)
     s))
 
 (defun make-keyword (name)

@@ -1,13 +1,15 @@
 (defpackage :slip
   (:use :cl :slip.utils)
   (:export #:slip #:dofiles #:set-file-ext #:get-front #:with-page
-	   #:*livereload* #:*livereload-port*))
+	   #:*livereload* #:*livereload-port* #:*path*))
 (in-package :slip)
 
 (defvar *files* (list))
 (defvar *serve* nil)
 (defvar *livereload* nil)
 (defvar *livereload-port* 35729)
+
+(defvar *path* nil)
 
 (defmacro slip ((&key (src "src/") (dest "dist/") (clean t)) &body body)
   `(progn
@@ -24,4 +26,5 @@
   (setf *serve* (equal "serve" (nth 1 argv)))
   (use-package :slip)
   (use-package :slip.stages)
+  (use-package :spinneret)
   (load "site.lisp"))

@@ -43,4 +43,5 @@
 			      (list (pathname-name filename)))))
 	(setf (getf file :name) (make-pathname :directory dirname
 					       :name "index"
-					       :type "html"))))))
+					       :type "html"))))
+    (remf (getf file :frontmatter) :permalink)))

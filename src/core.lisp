@@ -37,12 +37,14 @@
   (setf (getf file :name) (replace-ext ext (getf file :name))))
 
 (defun get-front (file key &optional default)
-  (when (getf file :frontmatter)
-    (getf (getf file :frontmatter) key default)))
+  (if (getf file :frontmatter)
+      (getf (getf file :frontmatter) key default)
+      default))
 
 (defmacro dofiles (file ext &body body)
   `(dolist (,file *files*)
      (when (equal ,ext (pathname-type (getf ,file :name)))
+       (setf *path* (str:concat "/" (trim-suffix "index.html" (to-string (getf ,file :name)))))
        ,@body)))
  
 (defmacro with-page ((&key title) &body body)
