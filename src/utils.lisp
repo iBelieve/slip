@@ -1,7 +1,8 @@
 (defpackage :slip.utils
   (:use :cl)
-  (:export #:to-string #:echo #:trim-prefix #:make-keyword #:hash-table-plist
-	   #:timing #:replace-ext #:ignored-dir-p #:ignored-file-p #:collect-files))
+  (:export #:to-string #:echo #:trim-prefix #:make-keyword #:hash-table-plist #:timing
+	   #:replace-ext #:ignored-dir-p #:ignored-file-p #:not-ignored-dir-p #:not-ignored-file-p
+	   #:collect-files))
 (in-package :slip.utils)
 
 
@@ -52,7 +53,13 @@
 	(and (str:starts-with? "#" filename)
 	     (str:ends-with? "#" filename)))))
 
-(defun collect-files (dir filter-dir filter-file)
+(defun not-ignored-dir-p (dir)
+  (not (ignored-dir-p dir)))
+
+(defun not-ignored-file-p (file)
+  (not (ignored-file-p file)))
+
+(defun collect-files (dir &optional (filter-dir #'not-ignored-dir-p) (filter-file #'not-ignored-file-p))
   (let ((results (list)))
     (defun process-dir (subdir)
       (dolist (file (uiop:directory-files subdir))

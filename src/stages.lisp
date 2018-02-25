@@ -1,6 +1,6 @@
 (defpackage :slip.stages
   (:use :cl :slip.utils :slip)
-  (:export #:markdown #:spinneret #:with-page))
+  (:export #:markdown #:spinneret))
 (in-package :slip.stages)
 
 
@@ -19,14 +19,6 @@
   (dolist (file (collect-files dir t
 			       (lambda (file) (equal "lisp" (pathname-type file)))))
     (load file)))
-
-(defmacro with-page ((&key title) &body body)
-  `(spinneret:with-html-string
-     (:doctype)
-     (:html
-      (:head
-       (:title ,title))
-      (:body ,@body))))
 
 (defun spinneret (&key (layouts "layouts/") default)
   (load-layouts layouts)

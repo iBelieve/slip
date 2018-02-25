@@ -1,6 +1,6 @@
 NAME = slip
 ASD = $(NAME).asd
-SOURCES = src/slip.lisp src/utils.lisp src/core.lisp src/stages.lisp
+SOURCES = src/slip.lisp src/utils.lisp src/core.lisp src/serve.lisp src/stages.lisp
 LISP = sbcl
 MANIFEST = manifest
 

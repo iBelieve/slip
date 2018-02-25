@@ -15,13 +15,16 @@
 	       :cl-yaml
 	       :cl-ppcre
 	       :markdown.cl
-	       :spinneret)
+	       :spinneret
+	       :woo
+	       :trivial-mimes)
   :components ((:module "src"
                 :serial t
                 :components
                 ((:file "utils")
 		 (:file "slip")
 		 (:file "core")
+		 (:file "serve")
 		 (:file "stages"))))
   :description "A static site generator in Common Lisp"
   :long-description

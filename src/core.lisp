@@ -3,8 +3,7 @@
 (defun get-files (dir)
   (let ((dir (truename dir)))
     (mapcar (lambda (file) (parse-file file dir))
-	    (collect-files dir (lambda (dir) (not (ignored-dir-p dir)))
-			   (lambda (file) (not (ignored-file-p file)))))))
+	    (collect-files dir)))) 
 
 (defun write-files (dir files &key clean)
   (when clean
@@ -46,3 +45,13 @@
      (when (equal ,ext (pathname-type (getf ,file :name)))
        ,@body)))
  
+(defmacro with-page ((&key title) &body body)
+  `(spinneret:with-html-string
+     (:doctype)
+     (:html
+      (:head
+       (:title ,title))
+      (:body
+       ,@body
+       (when *livereload*
+	 (:script :src *livereload-port*))))))
