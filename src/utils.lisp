@@ -2,7 +2,7 @@
   (:use :cl)
   (:export #:to-string #:echo #:trim-prefix #:trim-suffix #:make-keyword #:hash-table-plist #:timing
 	   #:replace-ext #:ignored-dir-p #:ignored-file-p #:not-ignored-dir-p #:not-ignored-file-p
-	   #:collect-files))
+	   #:collect-files #:file-or-directory-exists-p #:with-ctrlc))
 (in-package :slip.utils)
 
 
@@ -72,3 +72,21 @@
 	  (push file results))))
     (uiop:collect-sub*directories dir t filter-dir #'process-dir)
     results))
+
+(defun file-or-directory-exists-p (file)
+  (cond ((uiop:file-exists-p file)
+	 (merge-pathnames file))
+	((uiop:directory-exists-p file)
+	 (merge-pathnames file))
+	((uiop:directory-exists-p (str:concat file "/"))
+	 (merge-pathnames (str:concat file "/")))))
+
+(defmacro with-ctrlc (&body body)
+  `(handler-case
+       (progn ,@body)
+     (#+sbcl sb-sys:interactive-interrupt
+       #+ccl  ccl:interrupt-signal-condition
+       #+clisp system::simple-interrupt-condition
+       #+ecl ext:interactive-interrupt
+       #+allegro excl:interrupt-signal
+       ())))

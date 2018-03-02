@@ -17,7 +17,8 @@
 	       :markdown.cl
 	       :spinneret
 	       :woo
-	       :trivial-mimes)
+	       :trivial-mimes
+	       :cl-fsnotify)
   :components ((:module "src"
                 :serial t
                 :components
@@ -25,6 +26,7 @@
 		 (:file "slip")
 		 (:file "core")
 		 (:file "serve")
+		 (:file "watch")
 		 (:file "stages"))))
   :description "A static site generator in Common Lisp"
   :long-description

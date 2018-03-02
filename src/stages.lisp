@@ -16,6 +16,7 @@
 ;;; Spinneret (layouts in Lisp)
 
 (defun load-layouts (dir)
+  (push dir *watch-dirs*)
   (dolist (file (collect-files dir t
 			       (lambda (file) (equal "lisp" (pathname-type file)))))
     (load file)))
