@@ -29,4 +29,7 @@
   :description "A static site generator in Common Lisp"
   :long-description
   #.(uiop:read-file-string
-     (uiop:subpathname *load-pathname* "README.md")))
+     (uiop:subpathname *load-pathname* "README.md"))
+  :build-operation "program-op"
+  :build-pathname "slip"
+  :entry-point "slip:main")

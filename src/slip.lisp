@@ -1,6 +1,6 @@
 (defpackage :slip
   (:use :cl :slip.utils)
-  (:export #:slip #:dofiles #:set-file-ext #:get-front #:with-page
+  (:export #:main #:slip #:dofiles #:set-file-ext #:get-front #:with-page
 	   #:*livereload* #:*livereload-port* #:*path*))
 (in-package :slip)
 
@@ -22,8 +22,8 @@
 
 ;;; Entry point and arg processing
 
-(defun main (argv)
-  (setf *serve* (equal "serve" (nth 1 argv)))
+(defun main ()
+  (setf *serve* (equal "serve" (nth 1 sb-ext:*posix-argv*)))
   (use-package :slip)
   (use-package :slip.stages)
   (use-package :spinneret)
