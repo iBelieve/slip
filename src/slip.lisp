@@ -1,7 +1,7 @@
 (defpackage :slip
   (:use :cl :slip.utils :websocket-driver :wookie :wookie-plugin-export)
-  (:export #:main #:slip #:dofiles #:set-file-ext #:get-front #:with-page
-	   #:*livereload* #:*livereload-port* #:*path* #:*watch-dirs*))
+  (:export #:main #:slip #:dofiles #:set-file-ext #:frontmatter #:contents
+	   #:with-page #:*livereload* #:*livereload-port* #:*path* #:*watch-dirs*))
 (in-package :slip)
 
 (defparameter *serve-port* 5000)

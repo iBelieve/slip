@@ -14,32 +14,40 @@
     (let ((dest (merge-pathnames (getf file :name) dir))
 	  (contents (getf file :contents)))
       (ensure-directories-exist dest)
-      (str:to-file dest contents))))
+      (if contents
+	  (str:to-file dest contents)
+	  (file-copy (getf file :path) dest)))))
 
-(defun parse-frontmatter (s)
-  (let ((pattern (ppcre:create-scanner "---(.*)---" :single-line-mode t)))
+(defun load-file (file)
+  (let* ((s (str::from-file (getf file :path)))
+	 (pattern (ppcre:create-scanner "---(.*)---" :single-line-mode t)))
     (multiple-value-bind (match group) (ppcre:scan-to-strings pattern s)
       (if match
-	  (list :frontmatter (hash-table-plist (yaml:parse (str:trim (aref group 0))))
-		:contents (str:trim (str:substring (length match) t s)))
-	(list :frontmatter nil
-	      :contents s)))))
+	  (progn (setf (getf file :frontmatter) (hash-table-plist (yaml:parse (str:trim (aref group 0)))))
+		 (setf (getf file :contents) (str:trim (str:substring (length match) t s))))
+	  (setf (getf file :contents) s)))))
 
 (defun parse-file (path dir)
-  (let ((filename (trim-prefix (to-string dir) (to-string path)))
-	(file (parse-frontmatter (str::from-file path))))
+  (let ((filename (trim-prefix (to-string dir) (to-string path))))
     (list :name filename
 	  :path path
-	  :frontmatter (getf file :frontmatter)
-	  :contents (getf file :contents))))
+	  :frontmatter nil
+	  :contents nil)))
 
 (defun set-file-ext (ext file)
   (setf (getf file :name) (replace-ext ext (getf file :name))))
 
-(defun get-front (file key &optional default)
+(defun frontmatter (file key &optional default)
+  (when (not (getf file :contents))
+    (load-file file))
   (if (getf file :frontmatter)
       (getf (getf file :frontmatter) key default)
       default))
+
+(defun contents (file)
+  (when (not (getf file :contents))
+    (load-file file))
+  (getf file :contents))
 
 (defmacro dofiles (file ext &body body)
   `(dolist (,file *files*)

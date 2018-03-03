@@ -11,7 +11,9 @@
     (cond ((and (find :create events) (find :delete events))
 	   (if exists :modify nil))
 	  ((find :create events)
-	   (if exists :create :delete))
+	   (if exists
+	       (if (uiop:directory-pathname-p file) :create nil)
+	       :delete))
 	  (t
 	   (if exists :modify :delete)))))
 

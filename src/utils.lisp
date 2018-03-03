@@ -2,9 +2,8 @@
   (:use :cl)
   (:export #:to-string #:echo #:trim-prefix #:trim-suffix #:make-keyword #:hash-table-plist #:timing
 	   #:replace-ext #:ignored-dir-p #:ignored-file-p #:not-ignored-dir-p #:not-ignored-file-p
-	   #:collect-files #:file-or-directory-exists-p #:with-ctrlc))
+	   #:collect-files #:file-or-directory-exists-p #:with-ctrlc #:file-copy))
 (in-package :slip.utils)
-
 
 (defun to-string (thing)
   (format nil "~a" thing))
@@ -91,3 +90,11 @@
        #+allegro excl:interrupt-signal
        ()
        (uiop:quit))))
+
+(defun file-copy (source destination)
+  (with-open-file (in source :direction :input :element-type '(unsigned-byte 8))
+    (with-open-file (out destination :direction :output
+			 :if-exists :overwrite
+			 :if-does-not-exist :create
+			 :element-type '(unsigned-byte 8))
+      (uiop:copy-stream-to-stream in out :element-type '(unsigned-byte 8)))))

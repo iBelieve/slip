@@ -8,7 +8,7 @@
 
 (defun markdown ()
   (dofiles file "md"
-    (let* ((markdown (getf file :contents))
+    (let* ((markdown (contents file))
 	   (html (str:trim (markdown.cl:parse markdown))))
       (set-file-ext "html" file)
       (setf (getf file :contents) html))))
@@ -24,11 +24,11 @@
 (defun spinneret (&key (layouts "layouts/") default)
   (load-layouts layouts)
   (dofiles file "html"
-    (let ((layout-name (or (get-front file :layout) default)))
+    (let ((layout-name (or (frontmatter file :layout) default)))
       (when layout-name
 	(remf (getf file :frontmatter) :layout)
 	(let* ((layout (intern (string-upcase (str:concat "layout-" layout-name))))
-	       (args `(:contents ,(getf file :contents) ,@(getf file :frontmatter)))
+	       (args `(:contents ,(contents file) ,@(getf file :frontmatter)))
 	       (contents (apply layout args)))
 	  (setf (getf file :contents) contents))))))
 
@@ -40,7 +40,7 @@
     (make-pathname :directory dirname :name "index" :type "html")))
 
 (defun permalinkp (file)
-  (and (get-front file :permalink t)
+  (and (frontmatter file :permalink t)
        (not (equal "index" (pathname-name (getf file :name))))))
 
 (defun permalinks ()
