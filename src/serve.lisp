@@ -1,5 +1,14 @@
 (in-package :slip)
 
+(defun serve (dir &key (use-thread t) (port *serve-port*))
+  (clack:clackup
+   (lambda (env)
+     (serve-path (getf env :path-info) dir))
+   :port port
+   :server :wookie
+   :use-thread use-thread
+   :silent t))
+
 (defun directory-listing (uri dir)
   (let ((title (str:concat "Index of " uri)))
     (with-page (:title title)
@@ -23,7 +32,3 @@
 		   (mime (mimes:mime uri)))
 	       `(200 (:content-type ,mime) (,content)))
 	     '(404 (:content-type "text/plain") ("File not found"))))))
-
-(defun serve (dir)
-  (woo:run (lambda (env)
-	     (serve-path (getf env :request-uri) dir))))

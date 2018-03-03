@@ -59,5 +59,5 @@
 	(loop
 	   (process-changed-files
 	    (cleanup-changes (cl-fsnotify:get-events)) src rebuild)
-	   (sleep 1))))
+	   (sleep 0.1))))
   (cl-fsnotify:close-fsnotify))

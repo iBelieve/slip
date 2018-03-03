@@ -57,5 +57,5 @@
 	 (:link :rel "stylesheet" :href stylesheet)))
       (:body
        ,@body
-       (when *livereload*
-	 (:script :src *livereload-port*))))))
+       (when *watch*
+	 (:script (:raw *livereload-script*)))))))

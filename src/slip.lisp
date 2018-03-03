@@ -1,16 +1,15 @@
 (defpackage :slip
-  (:use :cl :slip.utils)
+  (:use :cl :slip.utils :websocket-driver :wookie :wookie-plugin-export)
   (:export #:main #:slip #:dofiles #:set-file-ext #:get-front #:with-page
 	   #:*livereload* #:*livereload-port* #:*path* #:*watch-dirs*))
 (in-package :slip)
 
-(defvar *files* (list))
+(defparameter *serve-port* 5000)
+
 (defvar *serve* nil)
 (defvar *watch* nil)
-(defvar *watch-dirs*)
-(defvar *livereload* nil)
-(defvar *livereload-port* 35729)
-
+(defvar *watch-dirs* (list))
+(defvar *files* (list))
 (defvar *path* nil)
 
 (defmacro slip ((&key (src "src/") (dest "dist/") (clean t)) &body body)
@@ -22,17 +21,16 @@
        (write-files ,dest *files* :clean ,clean))
      (when *watch*
        (echo "Watching for changes and serving on localhost:5000...")
-       (bt:make-thread
-	(lambda ()
-	  (serve ,dest)
-	  (uiop:quit)))
+       (livereload ,dest)
+       (serve ,dest)
        (watch-and-rebuild ,src *watch-dirs*
 			  (lambda ()
 			    ,@body
-			    (write-files ,dest *files* :clean nil))))
+			    (write-files ,dest *files* :clean nil)
+			    (livereload-send-changes))))
      (when *serve*
        (echo "Serving site on localhost:5000...")
-       (serve ,dest))))
+       (serve ,dest :use-thread nil))))
 
 ;;; Entry point and arg processing
 

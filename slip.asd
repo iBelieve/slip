@@ -16,11 +16,13 @@
 	       :cl-ppcre
 	       :markdown.cl
 	       :spinneret
-	       :woo
+	       :clack
+	       :wookie
 	       :trivial-mimes
 	       :cl-fsnotify
-	       :bt-semaphore
-	       :unix-opts)
+	       :unix-opts
+	       :websocket-driver-server
+	       :cl-json)
   :components ((:module "src"
                 :serial t
                 :components
@@ -29,6 +31,7 @@
 		 (:file "core")
 		 (:file "serve")
 		 (:file "watch")
+		 (:file "livereload")
 		 (:file "stages"))))
   :description "A static site generator in Common Lisp"
   :long-description
