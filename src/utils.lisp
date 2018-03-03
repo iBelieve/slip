@@ -89,4 +89,5 @@
        #+clisp system::simple-interrupt-condition
        #+ecl ext:interactive-interrupt
        #+allegro excl:interrupt-signal
-       ())))
+       ()
+       (uiop:quit))))

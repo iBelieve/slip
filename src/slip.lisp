@@ -6,6 +6,7 @@
 
 (defvar *files* (list))
 (defvar *serve* nil)
+(defvar *watch* nil)
 (defvar *watch-dirs*)
 (defvar *livereload* nil)
 (defvar *livereload-port* 35729)
@@ -20,19 +21,33 @@
        ,@body
        (write-files ,dest *files* :clean ,clean))
      (when *watch*
+       (echo "Watching for changes and serving on localhost:5000...")
+       (bt:make-thread
+	(lambda ()
+	  (serve ,dest)
+	  (uiop:quit)))
        (watch-and-rebuild ,src *watch-dirs*
 			  (lambda ()
 			    ,@body
 			    (write-files ,dest *files* :clean nil))))
      (when *serve*
+       (echo "Serving site on localhost:5000...")
        (serve ,dest))))
 
 ;;; Entry point and arg processing
 
+(opts:define-opts
+    (:name :help
+           :description "print this help text"
+           :short #\h
+           :long "help"))
+
 (defun main ()
-  (setf *serve* (equal "serve" (nth 1 sb-ext:*posix-argv*)))
-  (setf *watch* (equal "watch" (nth 1 sb-ext:*posix-argv*)))
   (use-package :slip)
   (use-package :slip.stages)
   (use-package :spinneret)
-  (load "site.lisp"))
+
+  (multiple-value-bind (options free-args) (opts:get-opts)
+    (setf *serve* (equal "serve" (first free-args)))
+    (setf *watch* (equal "watch" (first free-args)))
+    (load "site.lisp")))

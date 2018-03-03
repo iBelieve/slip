@@ -25,6 +25,5 @@
 	     '(404 (:content-type "text/plain") ("File not found"))))))
 
 (defun serve (dir)
-  (echo "Serving site on localhost:5000...")
   (woo:run (lambda (env)
 	     (serve-path (getf env :request-uri) dir))))

@@ -18,7 +18,9 @@
 	       :spinneret
 	       :woo
 	       :trivial-mimes
-	       :cl-fsnotify)
+	       :cl-fsnotify
+	       :bt-semaphore
+	       :unix-opts)
   :components ((:module "src"
                 :serial t
                 :components
